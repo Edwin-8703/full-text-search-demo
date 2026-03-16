@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Full Text Search Demo</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; min-height: 100vh; padding: 2rem; }
+
+    .container { max-width: 700px; margin: 0 auto; }
+
+    h1 { font-size: 1.6rem; color: #111827; margin-bottom: 0.4rem; }
+    p.subtitle { color: #6b7280; font-size: 0.9rem; margin-bottom: 2rem; }
+
+    .search-form { display: flex; gap: 0.5rem; margin-bottom: 2rem; }
+    .search-form input {
+      flex: 1;
+      padding: 0.65rem 1rem;
+      border: 2px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.15s;
+    }
+    .search-form input:focus { border-color: #3b82f6; }
+    .search-form button {
+      padding: 0.65rem 1.4rem;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .search-form button:hover { background: #2563eb; }
+
+    .result-count { font-size: 0.85rem; color: #6b7280; margin-bottom: 1rem; }
+
+    .result-card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      padding: 1.2rem 1.4rem;
+      margin-bottom: 1rem;
+    }
+    .result-card h3 { font-size: 1rem; color: #111827; margin-bottom: 0.4rem; }
+    .result-card p { font-size: 0.875rem; color: #6b7280; line-height: 1.6; margin-bottom: 0.6rem; }
+    .badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #3b82f6;
+      border: 1px solid #bfdbfe;
+      border-radius: 999px;
+      padding: 0.15rem 0.65rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .no-results { text-align: center; color: #9ca3af; padding: 3rem 0; font-size: 0.95rem; }
+    .empty-state { text-align: center; color: #9ca3af; padding: 3rem 0; font-size: 0.95rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <h1>Full text Search Demo</h1>
+
+    <form class="search-form" method="get">
+      <input type="text" name="q" value="{{ query }}" placeholder="Search documents... e.g. leave, disease, data">
+      <button type="submit">Search</button>
+    </form>
+
+    {% if query %}
+      <div class="result-count">
+        Found <strong>{{ results|length }}</strong> result{{ results|length|pluralize }} for "<strong>{{ query }}</strong>"
+      </div>
+
+      {% if results %}
+        {% for doc in results %}
+        <div class="result-card">
+          <h3>{{ doc.title }}</h3>
+          <p>{{ doc.content|truncatewords:30 }}</p>
+          <span class="badge">{{ doc.doc_type }}</span>
+        </div>
+        {% endfor %}
+
+      {% else %}
+        <div class="no-results">No documents found for "{{ query }}"</div>
+      {% endif %}
+
+    {% else %}
+      <div class="empty-state">Type something above to search documents</div>
+    {% endif %}
+
+  </div>
+</body>
+</html>
