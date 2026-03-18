@@ -1,1 +1,1 @@
-web: gunicorn search_project.wsgi
+web: python manage.py migrate && gunicorn search_project.wsgi --bind 0.0.0.0:$PORT
